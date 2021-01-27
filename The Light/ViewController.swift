@@ -26,6 +26,13 @@ class ViewController: UIViewController {
         view.backgroundColor = isLightOn ? .white : .black
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isLightOn.toggle()
+        updateUI()
+        switchFlash(isOn: isLightOn)
+        doHaptic()
+    }
+    
     fileprivate func switchFlash(isOn: Bool) {
         guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         guard device.hasTorch else { return }
@@ -48,15 +55,12 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func buttonPressed() {
-        
-        isLightOn.toggle()
-        updateUI()
-        switchFlash(isOn: isLightOn)
+    
+    fileprivate func doHaptic() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
-        
     }
+
     
     
 }
