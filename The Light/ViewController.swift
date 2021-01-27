@@ -11,7 +11,11 @@ import AVFoundation
 class ViewController: UIViewController {
 
     
-    var isLightOn = false
+    var isLightOn = true
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()        
@@ -49,6 +53,8 @@ class ViewController: UIViewController {
         isLightOn.toggle()
         updateUI()
         switchFlash(isOn: isLightOn)
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
         
     }
     
