@@ -9,10 +9,14 @@ import UIKit
 import AVFoundation
 
 class ViewController: UIViewController {
-
     
+    
+    //MARK: Constants & Varables
     var isLightOn = false
+        
+    //MARK: Overriden methods
     
+    /// Hiding status bar
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -21,21 +25,33 @@ class ViewController: UIViewController {
         super.viewDidLoad()        
         updateUI()
     }
-
+    
+    /// Hander for user touch the screen
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isLightOn.toggle()
+        updateUI()
+        switchTorch(isOn: isLightOn)
+        doHaptic()
+    }
+    
+    //MARK: Private methods
+    
+    /// Change screen color
     fileprivate func updateUI() {
         view.backgroundColor = isLightOn ? .white : .black
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isLightOn.toggle()
-        updateUI()
-        switchFlash(isOn: isLightOn)
-        doHaptic()
-    }
-    
-    fileprivate func switchFlash(isOn: Bool) {
-        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else { return }
-        guard device.hasTorch else { return }
+    /// Switch torch on/off
+    /// - Parameter isOn: Torch on/off flag
+    fileprivate func switchTorch(isOn: Bool) {
+        
+        guard let device = AVCaptureDevice.default(for: AVMediaType.video) else {
+            return
+        }
+        
+        guard device.hasTorch else {
+            return
+        }
         
         do {
             try device.lockForConfiguration()
@@ -54,14 +70,10 @@ class ViewController: UIViewController {
             print(error)
         }
     }
-    
-    
+        
+    /// Generate haptic feedback
     fileprivate func doHaptic() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
     }
-
-    
-    
 }
-
